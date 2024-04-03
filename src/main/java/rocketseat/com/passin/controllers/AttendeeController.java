@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 //identifica nossa class como um controller
 @RestController
 //mapeamento do nosso endpoint
-@RequestMapping("/event")
-public class EventController {
+@RequestMapping("/attendees")
+public class AttendeeController {
     //identifica o metodo que escuta uma requisição do tipo get
     @GetMapping
     public ResponseEntity<String> getTest(){
