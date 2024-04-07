@@ -1,8 +1,0 @@
-/*C2*/SET SCHEMA PUBLIC
-SET SCHEMA "PUBLIC"
-INSERT INTO ATTENDEES VALUES('4f982437-2ba0-4a63-b572-271963d10d65','Daniel Rosa','ronaldo@outlook.com','c6d73a24-4195-47ad-8762-537f002524d5','2024-04-07 19:38:11.502274')
-COMMIT
-INSERT INTO EVENTS VALUES('0f642fda-6bc8-4dbb-aff1-791110ebba8a','Rocketseat NLW Unite 2.0','Aprenda JAva de forma Gratuita','rocketseat-nlw-unite-20',1)
-COMMIT
-INSERT INTO ATTENDEES VALUES('1014095d-bd6b-4466-a387-d0274cec1e8d','Daniel Rosa','ronaldo@outlook.com','0f642fda-6bc8-4dbb-aff1-791110ebba8a','2024-04-07 19:44:01.970063')
-COMMIT

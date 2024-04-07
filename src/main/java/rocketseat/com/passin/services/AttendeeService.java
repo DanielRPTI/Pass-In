@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import rocketseat.com.passin.domain.attendee.Attendee;
-import rocketseat.com.passin.domain.attendee.exceptions.AttenddeNotFoundException;
+import rocketseat.com.passin.domain.attendee.exceptions.AttendeeNotFoundException;
 import rocketseat.com.passin.domain.attendee.exceptions.AttendeeAlreadyExistException;
 import rocketseat.com.passin.domain.checkin.CheckIn;
 import rocketseat.com.passin.dto.attendee.AttendeeBadgeResponseDTO;
@@ -23,6 +23,7 @@ import java.util.Optional;
 public class AttendeeService {
     private final AttendeeRepository attendeeRepository;
     private final CheckInRepository checkInRepository;
+    private final CheckInService checkInService;
 
     public List<Attendee> getAllAttendeesFromEvent(String eventId){
         return this.attendeeRepository.findByEventId(eventId);
@@ -43,8 +44,17 @@ public class AttendeeService {
         return newAttendee;
     }
 
+    private Attendee getAttendee(String attendeeId) {
+      return this.attendeeRepository.findById(attendeeId).orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with id" + attendeeId));
+    }
+
+    public void checkInAttendee(String attendeeId){
+        Attendee attendee = this.getAttendee(attendeeId);
+        this.checkInService.registerCheckIn(attendee);
+    }
+
     public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
-         Attendee attendee = this.attendeeRepository.findById(attendeeId).orElseThrow(() -> new AttenddeNotFoundException("Attendee not found with id" + attendeeId));
+         Attendee attendee = this.getAttendee(attendeeId);
 
         var uri = uriComponentsBuilder.path("/attendees/{attendeesId}/checkIn").buildAndExpand(attendeeId).toUri().toString();
 
