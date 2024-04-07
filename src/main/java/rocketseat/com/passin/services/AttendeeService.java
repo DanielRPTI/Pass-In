@@ -2,11 +2,15 @@ package rocketseat.com.passin.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import rocketseat.com.passin.domain.attendee.Attendee;
+import rocketseat.com.passin.domain.attendee.exceptions.AttenddeNotFoundException;
 import rocketseat.com.passin.domain.attendee.exceptions.AttendeeAlreadyExistException;
 import rocketseat.com.passin.domain.checkin.CheckIn;
+import rocketseat.com.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import rocketseat.com.passin.dto.attendee.AttendeeDetails;
 import rocketseat.com.passin.dto.attendee.AttendeesListResponseDTO;
+import rocketseat.com.passin.dto.attendee.AttendeeBadgeDTO;
 import rocketseat.com.passin.repositories.AttendeeRepository;
 import rocketseat.com.passin.repositories.CheckInRepository;
 
@@ -39,6 +43,14 @@ public class AttendeeService {
         return newAttendee;
     }
 
+    public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
+         Attendee attendee = this.attendeeRepository.findById(attendeeId).orElseThrow(() -> new AttenddeNotFoundException("Attendee not found with id" + attendeeId));
+
+        var uri = uriComponentsBuilder.path("/attendees/{attendeesId}/checkIn").buildAndExpand(attendeeId).toUri().toString();
+
+         AttendeeBadgeDTO badgeDTO = new AttendeeBadgeDTO(attendee.getName(), attendee.getEmail(), uri, attendee.getEvent().getId());
+        return new AttendeeBadgeResponseDTO(badgeDTO);
+    }
     public  void verifyAttendeeSubscription(String email, String eventId){
        Optional<Attendee> isAttendeeRegistered =  this.attendeeRepository.findByEventIdAndEmail(email, eventId);
        if(isAttendeeRegistered.isPresent())throw new AttendeeAlreadyExistException("Attendee is already registered");
